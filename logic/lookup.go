@@ -4,22 +4,20 @@ import (
 	"context"
 	"encoding/json"
 	"es4gophers/domain"
-	"fmt"
 	"math/rand"
-	"strconv"
 	"time"
 
 	"github.com/elastic/go-elasticsearch/v8"
 )
 
-func QueryMovieByDocumentID(ctx context.Context) {
+func QueryMovieByDocumentID(ctx context.Context, indexName string, docId string) string {
 
-	movies := ctx.Value(domain.MoviesKey).([]domain.Movie)
+	// movies := ctx.Value(domain.MoviesKey).([]domain.Movie)
 	client := ctx.Value(domain.ClientKey).(*elasticsearch.Client)
 
 	rand.Seed(time.Now().UnixNano())
-	documentID := rand.Intn(len(movies) - 1)
-	response, err := client.Get("movies", strconv.Itoa(documentID))
+	// documentID := rand.Intn(len(movies) - 1)
+	response, err := client.Get(indexName, docId)
 	if err != nil {
 		panic(err)
 	}
@@ -32,6 +30,6 @@ func QueryMovieByDocumentID(ctx context.Context) {
 	}
 
 	movieTitle := getResponse.Source.Title
-	fmt.Printf("✅ Movie with the ID %d: %s \n", documentID, movieTitle)
-
+	// fmt.Printf("✅ Movie with the ID %d: %s \n", documentID, movieTitle)
+	return movieTitle
 }

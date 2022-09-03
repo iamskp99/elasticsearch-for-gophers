@@ -10,7 +10,7 @@ import (
 	"github.com/elastic/go-elasticsearch/v8/esutil"
 )
 
-func IndexMoviesAsDocuments(ctx context.Context) {
+func IndexMoviesAsDocuments(ctx context.Context,indexName string) {
 
 	movies := ctx.Value(domain.MoviesKey).([]domain.Movie)
 	client := ctx.Value(domain.ClientKey).(*elasticsearch.Client)
@@ -28,7 +28,7 @@ func IndexMoviesAsDocuments(ctx context.Context) {
 	*/
 
 	bulkIndexer, err := esutil.NewBulkIndexer(esutil.BulkIndexerConfig{
-		Index:      "movies",
+		Index:      indexName,
 		Client:     client,
 		NumWorkers: 5,
 	})
